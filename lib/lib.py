@@ -1,19 +1,26 @@
-import random
+from __future__ import annotations
+
+import asyncio
+import hashlib
+import hmac
+import json
+import os
 import platform
-import requests
+import random
+import re
+import shutil
 import sys
 import uuid
-import hmac
-import os
-import hashlib
-import shutil
-import re
-import asyncio
-import json
-from DrissionPage import errors, SessionPage
-from zipfile import ZipFile
 from datetime import datetime
-from pymailtm import MailTm, Account
+from typing import TYPE_CHECKING, Any
+from zipfile import ZipFile
+
+import requests
+from DrissionPage import SessionPage, errors
+from pymailtm import Account, MailTm
+
+if TYPE_CHECKING:
+    from DrissionPage import ChromiumPage
 
 
 def getResourcePath(relative_path):
@@ -115,8 +122,10 @@ class UsernameGenerator:
             return self.VOW_WEIGHTED[weight][random.randrange(len(self.VOW_WEIGHTED[weight]))]
 
 
-class Main():
-    def downloadUngoogledChromium(self):
+class Main:
+    """Main utility class for Roblox account generation."""
+
+    def downloadUngoogledChromium(self) -> str | None:
         system = platform.system()
         page = SessionPage()
         versions = []
@@ -194,7 +203,7 @@ class Main():
         else:
             return "Download cancelled by user."
 
-    def returnUngoogledChromiumPath(self):
+    def returnUngoogledChromiumPath(self) -> str | None:
         system = platform.system()
         page = SessionPage()
         versions = []
@@ -216,7 +225,7 @@ class Main():
         else:
             return None
 
-    def usernameCreator(self, nameFormat=None, scrambled=False):
+    def usernameCreator(self, nameFormat: str | None = None, scrambled: bool = False) -> str:
         counter = 0
         maxAttempts = 100
 
@@ -254,7 +263,7 @@ class Main():
 
         return self.generateUsername(scrambled=True)
 
-    async def checkUpdate(self):
+    async def checkUpdate(self) -> str:
         try:
             resp = requests.get(
                 "https://api.github.com/repos/qing762/roblox-auto-signup/releases/latest",
@@ -293,7 +302,7 @@ class Main():
             print(f"An error occurred during update check: {e}")
             return "unknown"
 
-    async def checkPassword(self, username, password):
+    async def checkPassword(self, username: str, password: str) -> str:
         try:
             token = requests.post("https://auth.roblox.com/v2/login", headers={"User-Agent": "Mozilla/5.0"}, timeout=10).headers.get("x-csrf-token")
             data = {
@@ -321,7 +330,7 @@ class Main():
         except Exception as e:
             return f"\nPassword validation error: {e}"
 
-    async def customization(self, tab):
+    async def customization(self, tab: ChromiumPage) -> None:
         try:
             tab.listen.start('https://avatar.roblox.com/v1/avatar-inventory')
             tab.get("https://www.roblox.com/my/avatar")
@@ -390,7 +399,7 @@ class Main():
             ''')
             await asyncio.sleep(2)
 
-    def testProxy(self, proxy):
+    def testProxy(self, proxy: str) -> tuple[bool, str]:
         if not proxy or not proxy.strip():
             return False, "Empty proxy provided"
 
@@ -419,7 +428,7 @@ class Main():
         except Exception as e:
             return False, f"Proxy {proxy} test failed: {str(e)}"
 
-    async def generateEmail(self, password="Qing762.chy"):
+    async def generateEmail(self, password: str = "Qing762.chy") -> tuple[str, str, str, Any]:
         if not hasattr(self, 'mailtm'):
             self.mailtm = MailTm()
 
@@ -467,7 +476,7 @@ class Main():
                 else:
                     raise Exception(f"Failed to create email after {maxRetries} attempts: {e}")
 
-    def fetchVerification(self, address=None, password=None, emailID=None):
+    def fetchVerification(self, address: str | None = None, password: str | None = None, emailID: Any = None) -> list:
         if not address or not password or not emailID:
             raise ValueError("Address, password, and emailID must be provided.")
         if not hasattr(self, 'mailtm'):
@@ -477,7 +486,7 @@ class Main():
         messages = self.account.get_messages()
         return messages
 
-    def promptAnalytics(self):
+    def promptAnalytics(self) -> bool:
         if not os.path.exists("analytics.txt"):
             while True:
                 analytics = input("\nNo personal data is collected, but anonymous usage statistics help us improve. Allow data collection? [y/n] (Default: Yes): ").strip().lower()
@@ -498,7 +507,7 @@ class Main():
                 else:
                     print("Please enter a valid option (y/n).")
 
-    def checkAnalytics(self, version):
+    def checkAnalytics(self, version: str) -> bool | None:
         try:
             with open("analytics.txt", "r", encoding="utf-8") as file:
                 lines = file.readlines()
@@ -520,7 +529,7 @@ class Main():
             print(f"Error reading analytics configuration: {e}")
             return False
 
-    def sendAnalytics(self, version, userId=None):
+    def sendAnalytics(self, version: str, userId: str | None = None) -> None:
         # DO NOT CHANGE THIS KEY, IT IS USED FOR SIGNING THE ANALYTICS DATA
         key = b"Qing762.chy"
 
@@ -558,7 +567,7 @@ class Main():
         except requests.RequestException as e:
             print(f"\nAn error occurred while sending analytics data: {e}")
 
-    def generateUsername(self, scrambled=None):
+    def generateUsername(self, scrambled: bool | None = None) -> str:
         if scrambled is False:
             try:
                 with open(getResourcePath('lib/verbs.txt'), 'r', encoding='utf-8') as f:
@@ -589,7 +598,7 @@ class Main():
             gen = UsernameGenerator(10, 15)
             return gen.generate()
 
-    async def followUser(self, user, tab):
+    async def followUser(self, user: list[str], tab: ChromiumPage) -> list[int]:
         userIDList = []
         for x in user:
             try:
@@ -628,7 +637,7 @@ class Main():
                 print(f"Unexpected error when following user {x}: {e}")
         return userIDList
 
-    async def saveAccount(self, account):
+    async def saveAccount(self, account: dict[str, Any]) -> None:
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         try:
             with open("./accounts.txt", "a", encoding="utf-8") as f:

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - rblxgenerator</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;600;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/terminal.css">
+    <link rel="stylesheet" href="css/auth.css">
+</head>
+
+<body>
+    <div class="auth-container">
+        <div class="auth-box">
+            <div class="auth-header">
+                <a href="index.html" class="auth-logo">rblx<span>generator</span></a>
+                <p class="auth-subtitle">Initialize your access_token</p>
+            </div>
+
+            <form class="auth-form" id="signupForm">
+                <div class="input-group">
+                    <label>Username</label>
+                    <div class="input-wrapper">
+                        <span class="input-prefix">user@</span>
+                        <input type="text" placeholder="username" required>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>Email</label>
+                    <div class="input-wrapper">
+                        <span class="input-prefix">mail:</span>
+                        <input type="email" placeholder="email@address.com" required>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>Password</label>
+                    <div class="input-wrapper">
+                        <span class="input-prefix">pass:</span>
+                        <input type="password" placeholder="••••••••" required>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" required>
+                        <span class="checkbox-custom"></span>
+                        <span class="text">I accept the <a href="#">TOS</a> and <a href="#">Privacy Policy</a></span>
+                    </label>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block">
+                    <span class="btn-text">Create Account</span>
+                    <span class="btn-glitch"></span>
+                </button>
+            </form>
+
+            <div class="auth-footer">
+                <p>Already have access? <a href="login.html" class="link-animate">Login_System()</a></p>
+            </div>
+
+            <div class="terminal-decor">
+                <div class="line"></div>
+                <div class="line"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('signupForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            // Simulate processing
+            const btn = e.target.querySelector('button');
+            const originalText = btn.querySelector('.btn-text').innerText;
+            btn.querySelector('.btn-text').innerText = 'ENCRYPTING...';
+            btn.style.opacity = '0.7';
+
+            setTimeout(() => {
+                window.location.href = 'dashboard.html';
+            }, 1500);
+        });
+    </script>
+</body>
+
+</html>

@@ -1,16 +1,21 @@
+"""Roblox Auto Signup - Automated account generator."""
+from __future__ import annotations
+
 import asyncio
-import warnings
-import os
-import sys
-import re
-import pyperclip
-import random
-import locale
 import gc
+import locale
+import os
+import random
+import re
+import sys
+import warnings
 from datetime import datetime
+
+import pyperclip
 from DrissionPage import Chromium, ChromiumOptions, errors
 from tqdm import TqdmExperimentalWarning
 from tqdm.rich import tqdm
+
 from lib.lib import Main, getResourcePath
 
 
@@ -18,7 +23,7 @@ warnings.filterwarnings("ignore", category=TqdmExperimentalWarning)
 warnings.filterwarnings("ignore", category=UserWarning, module="pkg_resources")
 
 
-async def main():
+async def main() -> None:
     lib = Main()
     co = ChromiumOptions()
     co.set_argument("--lang", "en")

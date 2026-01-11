@@ -1,0 +1,239 @@
+/* Auth Pages Styles */
+
+.auth-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #050505;
+    background-image:
+        radial-gradient(circle at 50% 0%, rgba(255, 0, 51, 0.1) 0%, transparent 50%),
+        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+    background-size: 100% 100%, 40px 40px, 40px 40px;
+    padding: 20px;
+}
+
+.auth-box {
+    width: 100%;
+    max-width: 420px;
+    background: #0d0d0d;
+    border: 1px solid var(--border-dim);
+    border-radius: 16px;
+    padding: 40px;
+    position: relative;
+    box-shadow:
+        0 0 0 1px rgba(255, 0, 51, 0.1),
+        0 20px 40px rgba(0, 0, 0, 0.6);
+    overflow: hidden;
+}
+
+/* Glowing Border Effect */
+.auth-box::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--red-primary), transparent);
+    animation: scanline 2s linear infinite;
+}
+
+@keyframes scanline {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+.auth-header {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.auth-logo {
+    display: inline-block;
+    font-size: 28px;
+    font-weight: 700;
+    color: #fff;
+    text-decoration: none;
+    margin-bottom: 8px;
+    font-family: var(--font-mono);
+}
+
+.auth-logo span {
+    color: var(--red-primary);
+}
+
+.auth-subtitle {
+    font-size: 14px;
+    color: var(--text-secondary);
+    font-family: var(--font-mono);
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.input-group label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-dim);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.input-wrapper:focus-within {
+    border-color: var(--red-primary);
+    box-shadow: 0 0 0 3px rgba(255, 0, 51, 0.1);
+}
+
+.input-prefix {
+    padding-left: 12px;
+    font-family: var(--font-mono);
+    color: var(--red-primary);
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.input-wrapper input {
+    width: 100%;
+    padding: 12px;
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-family: var(--font-mono);
+    font-size: 14px;
+    outline: none;
+}
+
+.input-wrapper input::placeholder {
+    color: rgba(255, 255, 255, 0.2);
+}
+
+/* Custom Checkbox */
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    gap: 10px;
+}
+
+.checkbox-label input {
+    display: none;
+}
+
+.checkbox-custom {
+    width: 18px;
+    height: 18px;
+    border: 1px solid var(--border-dim);
+    border-radius: 4px;
+    background: var(--bg-tertiary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.checkbox-label input:checked+.checkbox-custom {
+    background: var(--red-primary);
+    border-color: var(--red-primary);
+}
+
+.checkbox-custom::after {
+    content: '✓';
+    color: #fff;
+    font-size: 12px;
+    display: none;
+}
+
+.checkbox-label input:checked+.checkbox-custom::after {
+    display: block;
+}
+
+.checkbox-label .text {
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+.checkbox-label a {
+    color: var(--red-primary);
+    text-decoration: none;
+}
+
+/* Button & Links */
+.form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+}
+
+.forgot-pass {
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.forgot-pass:hover {
+    color: #fff;
+}
+
+.btn-block {
+    width: 100%;
+    margin-top: 10px;
+}
+
+.auth-footer {
+    text-align: center;
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-dim);
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+.auth-footer a {
+    color: var(--red-primary);
+    text-decoration: none;
+    font-family: var(--font-mono);
+    font-weight: 600;
+}
+
+.auth-footer a:hover {
+    text-decoration: underline;
+}
+
+/* Terminal Decor */
+.terminal-decor {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    gap: 4px;
+    opacity: 0.3;
+}
+
+.terminal-decor .line {
+    width: 4px;
+    height: 4px;
+    background: var(--red-primary);
+}

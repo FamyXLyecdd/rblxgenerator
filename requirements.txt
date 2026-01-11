@@ -1,7 +1,9 @@
-DrissionPage==4.1.0.18
-pymailtm==1.1.1
-pyperclip==1.9.0
-Requests==2.32.5
-tqdm==4.66.3
-rich==13.8.0
-pyinstaller==6.11.0
+DrissionPage>=4.0.0
+pyperclip>=1.8.2
+tqdm>=4.66.1
+rich>=13.7.0
+pyinstaller>=6.3.0
+pymailtm>=0.0.5
+flask>=3.0.0
+flask-cors>=4.0.0
+gevent>=23.9.1

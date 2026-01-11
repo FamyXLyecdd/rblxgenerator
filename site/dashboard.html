@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - rblxgenerator</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/terminal.css">
+    <style>
+        /* Dashboard Layout */
+        body {
+            background-color: #050505;
+            display: flex;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: #0d0d0d;
+            border-right: 1px solid var(--border-dim);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo-area {
+            margin-bottom: 40px;
+            padding-left: 12px;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            color: #fff;
+            text-decoration: none;
+            font-family: var(--font-mono);
+        }
+
+        .logo span {
+            color: var(--red-primary);
+        }
+
+        .nav-category {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            padding-left: 12px;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .sidebar-nav {
+            list-style: none;
+            margin-bottom: 32px;
+        }
+
+        .nav-item {
+            margin-bottom: 4px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.2s;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+        }
+
+        .nav-link.active {
+            background: rgba(255, 0, 51, 0.1);
+            color: var(--red-primary);
+        }
+
+        .nav-icon {
+            font-family: var(--font-mono);
+            font-weight: bold;
+        }
+
+        .user-profile {
+            margin-top: auto;
+            border-top: 1px solid var(--border-dim);
+            padding-top: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-dim);
+        }
+
+        .user-info {
+            flex: 1;
+        }
+
+        .username {
+            font-size: 14px;
+            font-weight: 600;
+            color: #fff;
+            display: block;
+        }
+
+        .plan-badge {
+            font-size: 10px;
+            color: var(--text-muted);
+            background: var(--bg-tertiary);
+            padding: 2px 6px;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 32px;
+            overflow-y: auto;
+        }
+
+        .page-header {
+            margin-bottom: 32px;
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+
+        .page-subtitle {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        /* Stats Bar */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: #0d0d0d;
+            border: 1px solid var(--border-dim);
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .stat-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background: var(--bg-tertiary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--red-primary);
+            font-family: var(--font-mono);
+            font-size: 18px;
+        }
+
+        .stat-data h3 {
+            font-size: 20px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 4px;
+        }
+
+        .stat-data p {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* Generator Interface */
+        .generator-layout {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 24px;
+        }
+
+        .gen-card {
+            background: #0d0d0d;
+            border: 1px solid var(--border-dim);
+            border-radius: 12px;
+            padding: 24px;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .gen-mode {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-dim);
+            border-radius: 8px;
+            padding: 4px;
+            display: flex;
+            margin-bottom: 24px;
+        }
+
+        .mode-btn {
+            flex: 1;
+            padding: 8px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .mode-btn.active {
+            background: var(--bg-secondary);
+            color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .gen-option {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-dim);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .gen-option.selected {
+            border-color: var(--red-primary);
+            background: rgba(255, 0, 51, 0.05);
+        }
+
+        .option-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .option-desc {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .time-badge {
+            font-size: 11px;
+            font-family: var(--font-mono);
+            color: var(--text-secondary);
+            background: var(--bg-tertiary);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        /* Account Preview */
+        .account-preview {
+            background: linear-gradient(135deg, #1a0505 0%, #0d0d0d 100%);
+            border: 1px solid var(--border-dim);
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .preview-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--border-dim);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .preview-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #222;
+            border: 2px solid var(--red-primary);
+            position: relative;
+        }
+
+        .preview-avatar::after {
+            content: '';
+            position: absolute;
+            bottom: 4px;
+            right: 4px;
+            width: 14px;
+            height: 14px;
+            background: #00ff88;
+            border: 2px solid #1a0505;
+            border-radius: 50%;
+        }
+
+        .preview-info h3 {
+            font-size: 18px;
+            color: #fff;
+            margin-bottom: 4px;
+        }
+
+        .preview-meta {
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-family: var(--font-mono);
+            display: flex;
+            gap: 12px;
+        }
+
+        .preview-body {
+            padding: 24px;
+        }
+
+        .field-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .copy-field {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-dim);
+            border-radius: 8px;
+            padding: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .field-value {
+            font-family: var(--font-mono);
+            color: #fff;
+            font-size: 14px;
+        }
+
+        .copy-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        .copy-btn:hover {
+            color: #fff;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-badge.working {
+            background: rgba(0, 255, 136, 0.1);
+            color: #00ff88;
+            border: 1px solid rgba(0, 255, 136, 0.2);
+        }
+
+        .controls {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border-dim);
+            color: var(--text-secondary);
+        }
+
+        .btn-outline:hover {
+            border-color: #fff;
+            color: #fff;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="logo-area">
+            <a href="index.html" class="logo">rblx<span>generator</span></a>
+        </div>
+
+        <div class="nav-category">Dashboard</div>
+        <ul class="sidebar-nav">
+            <li class="nav-item">
+                <a href="#" class="nav-link active">
+                    <span class="nav-icon">[+]</span> Generate
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link">
+                    <span class="nav-icon">[=]</span> Accounts
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link">
+                    <span class="nav-icon">[*]</span> Cookie Checker
+                </a>
+            </li>
+        </ul>
+
+        <div class="nav-category">System</div>
+        <ul class="sidebar-nav">
+            <li class="nav-item">
+                <a href="#" class="nav-link">
+                    <span class="nav-icon">[$]</span> Upgrade
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link">
+                    <span class="nav-icon">[?]</span> Support
+                </a>
+            </li>
+        </ul>
+
+        <div class="user-profile">
+            <div class="avatar"></div>
+            <div class="user-info">
+                <span class="username">Guest_User</span>
+                <span class="plan-badge">Free Plan</span>
+            </div>
+            <a href="index.html" style="color: var(--text-muted);">→</a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="page-header">
+            <h1 class="page-title">Account Generator</h1>
+            <p class="page-subtitle">Generate unlimited Roblox accounts instantly.</p>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">🔥</div>
+                <div class="stat-data">
+                    <h3>0</h3>
+                    <p>Current Streak</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📅</div>
+                <div class="stat-data">
+                    <h3>0</h3>
+                    <p>Generated Today</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">💎</div>
+                <div class="stat-data">
+                    <h3>0</h3>
+                    <p>Total Generated</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">⚡</div>
+                <div class="stat-data">
+                    <h3>0ms</h3>
+                    <p>Avg Speed</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="generator-layout">
+            <!-- Left Panel: Config -->
+            <div class="gen-card">
+                <div class="card-title">Account Type</div>
+
+                <div class="gen-mode">
+                    <div class="mode-btn active">Alt Account</div>
+                    <div class="mode-btn">Random</div>
+                </div>
+
+                <div class="gen-option selected">
+                    <div class="option-header">
+                        <span>Fresh Alt</span>
+                        <span class="time-badge">~15s</span>
+                    </div>
+                    <div class="option-desc">Brand new level 1 account with verified email.</div>
+                </div>
+
+                <div class="gen-option">
+                    <div class="option-header">
+                        <span>Aged Alt (2018-2022)</span>
+                        <span class="time-badge">Stock: 0</span>
+                    </div>
+                    <div class="option-desc">Old creation date accounts. Premium only.</div>
+                </div>
+
+                <button class="btn btn-primary btn-block" id="generateBtn" style="margin-top: 24px;">Generate
+                    Account</button>
+            </div>
+
+            <!-- Right Panel: Output with Split View -->
+            <div class="account-preview" id="main-panel"
+                style="position:relative; min-height:500px; display:grid; grid-template-columns: 1fr 1.2fr; gap:20px; background:var(--bg-card); padding:20px; border:1px solid var(--border-color); border-radius:12px;">
+
+                <!-- Left Column: Account Details (Permanent) -->
+                <div class="details-section" style="display:flex; flex-direction:column; gap:15px;">
+                    <div class="preview-header"
+                        style="border-bottom:1px solid var(--border-dim); padding-bottom:15px; margin-bottom:0;">
+                        <div class="preview-avatar"></div>
+                        <div class="preview-info">
+                            <h3 id="previewUser">Ready</h3>
+                            <div class="preview-meta">
+                                <span id="previewId">ID: ---</span>
+                                <span id="previewDate">Waiting...</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="preview-body">
+                        <label class="field-label">Username</label>
+                        <div class="copy-field">
+                            <span class="field-value" id="outUser">---</span>
+                            <button class="copy-btn">📋</button>
+                        </div>
+
+                        <label class="field-label">Password</label>
+                        <div class="copy-field">
+                            <span class="field-value" id="outPass">---</span>
+                            <button class="copy-btn">📋</button>
+                        </div>
+
+                        <label class="field-label">Combo</label>
+                        <div class="copy-field">
+                            <span class="field-value" id="outCombo">---:---</span>
+                            <button class="copy-btn">📋</button>
+                        </div>
+
+                        <div class="status-badge" id="statusBadge">
+                            System Idle
+                        </div>
+
+                        <div class="controls" style="margin-top:auto;">
+                            <!-- Auto-Loop Toggle -->
+                            <div style="flex:1; display:flex; align-items:center; gap:8px;">
+                                <input type="checkbox" id="autoLoop" checked>
+                                <label for="autoLoop" style="font-size:12px; color:#888;">Auto-Next (Chain)</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Interactive Zone (Console / Stream) -->
+                <div id="interactive-zone"
+                    style="position:relative; background:#080808; border-radius:8px; border:1px solid #222; overflow:hidden; display:flex; flex-direction:column;">
+
+                    <!-- View 1: Console Logs -->
+                    <div id="view-console"
+                        style="flex:1; padding:15px; font-family:'JetBrains Mono', monospace; font-size:11px; color:#bbb; overflow-y:auto;">
+                        <div
+                            style="color:#666; border-bottom:1px solid #222; padding-bottom:5px; margin-bottom:10px; font-weight:bold;">
+                            TERMINAL OUTPUT</div>
+                        <div id="console-logs" style="display:flex; flex-direction:column; gap:4px;">
+                            <div style="color:#444;">> Waiting for command...</div>
+                        </div>
+                    </div>
+
+                    <!-- View 2: Stream -->
+                    <div id="view-stream" style="display:none; flex:1; background:#000; flex-direction:column;">
+                        <div
+                            style="width:100%; background:#111; padding:8px 12px; color:#aaa; font-size:11px; border-bottom:1px solid #222; display:flex; justify-content:space-between; align-items:center;">
+                            <span>INTERACTIVE SESSION</span>
+                            <span style="color:#00ff88; font-size:9px;">LIVE</span>
+                        </div>
+                        <div id="stream-container"
+                            style="position:relative; flex:1; overflow:hidden; cursor:crosshair; background:#000;">
+                            <!-- object-fit: fill ensures the 800x700 browser image stretches EXACTLY to the container,
+                                 so 50% x 50% click on container is 50% x 50% on browser. -->
+                            <img id="stream-img" src=""
+                                style="width:100%; height:100%; object-fit:fill; display:block;">
+                            <div id="click-marker"
+                                style="position:absolute; width:10px; height:10px; background:red; border-radius:50%; pointer-events:none; display:none; transform:translate(-50%, -50%); box-shadow:0 0 10px red;">
+                            </div>
+                            <div
+                                style="position:absolute; bottom:10px; left:0; width:100%; text-align:center; pointer-events:none;">
+                                <span
+                                    style="background:rgba(0,0,0,0.7); color:#fff; padding:4px 8px; border-radius:4px; font-size:10px;">Click
+                                    target accurately</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/captcha.js"></script>
+    <!-- Remote Bridge Logic -->
+    <script>
+        const API_BASE = '';
+        const btn = document.getElementById('generateBtn');
+        const autoLoop = document.getElementById('autoLoop');
+
+        let isPolling = false;
+        let captchaActive = false;
+        let logHistory = [];
+
+        // View Switcher (Updated for Split Layout)
+        function switchView(viewName) {
+            const consoleView = document.getElementById('view-console');
+            const streamView = document.getElementById('view-stream');
+
+            consoleView.style.display = 'none';
+            streamView.style.display = 'none';
+
+            if (viewName === 'console' || viewName === 'result') consoleView.style.display = 'flex';
+            if (viewName === 'stream') streamView.style.display = 'flex';
+        }
+
+        function updateStatusBadge(status, text) {
+            const badge = document.getElementById('statusBadge');
+            badge.className = 'status-badge';
+            if (status === 'working') badge.classList.add('working');
+            if (status === 'waiting') badge.style.color = '#ffaa00';
+            if (status === 'error') badge.style.color = '#ff3333';
+            badge.innerText = text;
+        }
+
+        // Prevent Exit
+        window.onbeforeunload = function () {
+            if (isPolling) return "Generation active. Leaving will stop the bot.";
+        };
+
+        const streamImg = document.getElementById('stream-img');
+        const streamContainer = document.getElementById('stream-container');
+
+        // Click Handler (Normalized)
+        streamContainer.addEventListener('mousedown', (e) => {
+            if (!captchaActive) return;
+
+            const rect = streamImg.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            // Normalize
+            const normX = x / rect.width;
+            const normY = y / rect.height;
+
+            // Visual feedback
+            const marker = document.getElementById('click-marker');
+            marker.style.left = (normX * 100) + '%';
+            marker.style.top = (normY * 100) + '%';
+            marker.style.display = 'block';
+            setTimeout(() => marker.style.display = 'none', 300);
+
+            fetch(`${API_BASE}/api/click`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ x: normX, y: normY })
+            });
+        });
+
+        btn.addEventListener('click', () => {
+            if (isPolling) return;
+            startGeneration();
+        });
+
+        async function startGeneration() {
+            btn.innerHTML = 'Starting...';
+            btn.style.opacity = 0.5;
+            switchView('console');
+
+            // Reset fields
+            document.getElementById('outUser').innerText = '---';
+            document.getElementById('outPass').innerText = '---';
+            document.getElementById('outCombo').innerText = '---';
+            updateStatusBadge('waiting', 'Initializing...');
+
+            document.getElementById('console-logs').innerHTML = '';
+            logHistory = [];
+
+            try {
+                const res = await fetch(`${API_BASE}/api/start`, { method: 'POST', body: JSON.stringify({ mode: 'alt' }), headers: { 'Content-Type': 'application/json' } });
+                if (res.ok) {
+                    isPolling = true;
+                    btn.innerHTML = 'Running...';
+                    pollStatus();
+                } else {
+                    const data = await res.json();
+                    btn.innerHTML = 'Error';
+                    addLog('Error starting: ' + data.error);
+                }
+            } catch (e) {
+                btn.innerHTML = 'Connection Failed';
+                addLog('Connection Error: ' + e);
+            }
+        }
+
+        function addLog(msg) {
+            if (logHistory.includes(msg)) return; // Debounce
+            logHistory.push(msg);
+            const div = document.createElement('div');
+            div.innerText = `> ${msg}`;
+            if (msg.includes('Captcha')) div.style.color = '#ffaa00';
+            if (msg.includes('Success')) div.style.color = '#00ff88';
+            const logContainer = document.getElementById('console-logs');
+            logContainer.appendChild(div);
+            // Auto scroll main container
+            document.getElementById('view-console').scrollTop = document.getElementById('view-console').scrollHeight;
+        }
+
+        async function pollStatus() {
+            if (!isPolling) return;
+
+            try {
+                const res = await fetch(`${API_BASE}/api/status`);
+                const data = await res.json();
+
+                // Update Logs
+                if (data.logs && data.logs.length > 0) {
+                    data.logs.forEach(log => addLog(log));
+                }
+
+                // Captcha Handling
+                if (data.status === 'CAPTCHA_WAITING') {
+                    updateStatusBadge('waiting', 'Requires Solution');
+                    if (!captchaActive) {
+                        switchView('stream');
+                        captchaActive = true;
+                        btn.innerHTML = 'SOLVE NOW';
+                    }
+                    if (data.captcha_image) {
+                        streamImg.src = 'data:image/png;base64,' + data.captcha_image;
+                    }
+                } else {
+                    captchaActive = false;
+                    if (data.status === 'GENERATING') {
+                        updateStatusBadge('working', 'Generating...');
+                        // Switch back to console to show progress
+                        if (document.getElementById('view-stream').style.display !== 'none') {
+                            switchView('console');
+                            btn.innerHTML = 'Processing...';
+                        }
+                    }
+                }
+
+                // Success
+                if (data.status === 'SUCCESS' && data.account) {
+                    isPolling = false;
+                    btn.innerHTML = 'Generate Account';
+                    btn.style.opacity = 1;
+
+                    switchView('result'); // Console view
+
+                    document.getElementById('previewUser').innerText = data.account.username;
+                    document.getElementById('outUser').innerText = data.account.username;
+                    document.getElementById('outPass').innerText = data.account.password;
+                    document.getElementById('outCombo').innerText = `${data.account.username}:${data.account.password}`;
+                    updateStatusBadge('working', '✓ Account Active');
+                    updateStats();
+
+                    // Auto Loop (Instant)
+                    if (autoLoop && autoLoop.checked) {
+                        btn.innerHTML = 'Looping...';
+                        startGeneration();
+                    }
+                }
+
+                // Error
+                if (data.status === 'ERROR' || data.status === 'FAILED') {
+                    isPolling = false;
+                    btn.innerHTML = 'Retry';
+                    btn.style.opacity = 1;
+                    addLog('Failed. Stopping.');
+                    updateStatusBadge('error', 'Generation Failed');
+
+                    // Retry loop? No, failing might need manual intervention.
+                    // But user said "just do the accounts".
+                    // Let's retry on fail if loop is checked? 
+                    // No, that might spiral.
+                }
+
+                const interval = captchaActive ? 50 : 1000;
+                if (isPolling) setTimeout(pollStatus, interval);
+
+            } catch (e) {
+                console.error("Poll Error", e);
+                isPolling = false;
+            }
+        }
+
+        function updateStats() {
+            const stats = document.querySelectorAll('.stat-data h3');
+            if (stats.length > 0) {
+                stats[0].innerText = parseInt(stats[0].innerText || 0) + 1;
+                stats[1].innerText = parseInt(stats[1].innerText || 0) + 1;
+                stats[2].innerText = parseInt(stats[2].innerText || 0) + 1;
+            }
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,1493 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="rblxgenerator - Free Roblox account generator with auto-captcha, email verification, and more.">
+    <title>rblxgenerator - Roblox Account Generator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/terminal.css">
+    <style>
+        /* Page-specific styles */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: var(--space-md) var(--space-lg);
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-dim);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            font-size: var(--font-size-lg);
+            font-weight: 700;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+
+        .nav-logo span {
+            color: var(--red-primary);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: var(--space-lg);
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: var(--font-size-sm);
+            transition: color var(--transition-fast);
+        }
+
+        .nav-links a:hover {
+            color: var(--red-primary);
+        }
+
+        .hero {
+            padding-top: 100px;
+        }
+
+        /* Hero Terminal - Left Aligned with Account Output */
+        .hero-terminal {
+            max-width: 700px;
+            margin: 0 auto var(--space-xl);
+            background: #0d0d0d;
+            border: 1px solid var(--border-dim);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow:
+                0 0 0 1px rgba(255, 0, 51, 0.1),
+                0 20px 60px rgba(0, 0, 0, 0.5),
+                0 0 80px rgba(255, 0, 51, 0.1);
+        }
+
+        .hero-terminal-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 16px;
+            background: #1a1a1a;
+            border-bottom: 1px solid var(--border-dim);
+        }
+
+        .hero-terminal-title {
+            margin-left: auto;
+            font-size: 12px;
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+        }
+
+        .hero-terminal-body {
+            padding: 20px;
+            font-family: var(--font-mono);
+            font-size: 13px;
+            line-height: 1.7;
+            text-align: left;
+            height: 300px;
+            /* Fixed height to prevent growth */
+            overflow: hidden;
+            /* Hide scrollbar but allow JS scrolling */
+            position: relative;
+        }
+
+        .term-line {
+            margin-bottom: 2px;
+            color: var(--text-primary);
+        }
+
+        .term-line .t-prompt {
+            color: var(--red-primary);
+            margin-right: 8px;
+            font-weight: 700;
+        }
+
+        .term-line.t-info {
+            color: var(--text-secondary);
+        }
+
+        .term-line.t-success {
+            color: var(--terminal-green);
+        }
+
+        .term-line.t-account {
+            color: var(--terminal-green);
+        }
+
+        .term-line .acc-user {
+            color: #00d4ff;
+            font-weight: 600;
+        }
+
+        .term-line .acc-pass {
+            color: #ffbd2e;
+        }
+
+        .t-cursor {
+            display: inline-block;
+            width: 10px;
+            height: 16px;
+            background: var(--red-primary);
+            animation: blink 1s step-end infinite;
+            vertical-align: text-bottom;
+        }
+
+        @keyframes blink {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0;
+            }
+        }
+
+        .typing-text::after {
+            content: '|';
+            animation: blink 1s step-end infinite;
+        }
+
+        .stats-bar {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-2xl);
+            margin-top: var(--space-2xl);
+            padding: var(--space-lg);
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-dim);
+            border-radius: var(--radius-lg);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: var(--font-size-2xl);
+            font-weight: 700;
+            color: var(--red-primary);
+        }
+
+        .stat-label {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+        }
+
+        .section-title {
+            font-size: var(--font-size-2xl);
+            text-align: center;
+            margin-bottom: var(--space-xl);
+        }
+
+        .section-title span {
+            color: var(--red-primary);
+        }
+
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-dim);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--space-md);
+            color: var(--red-primary);
+            font-weight: 700;
+        }
+
+        .cta-section {
+            text-align: center;
+            padding: var(--space-2xl);
+            background: linear-gradient(180deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="nav">
+        <a href="index.html" class="nav-logo">rblx<span>generator</span></a>
+        <ul class="nav-links">
+            <li><a href="#features">Features</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+            <li><a href="login.html">Login</a></li>
+        </ul>
+        <a href="signup.html" class="nav-cta">Get Started</a>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-terminal">
+            <div class="hero-terminal-header">
+                <div class="terminal-dot red"></div>
+                <div class="terminal-dot yellow"></div>
+                <div class="terminal-dot green"></div>
+                <span class="hero-terminal-title">root@rblxgen:~/generator</span>
+            </div>
+            <div class="hero-terminal-body" id="heroTerminal">
+                <div class="term-line"><span class="t-prompt">$</span> ./rblxgenerator --start --loop</div>
+                <div class="term-line t-info">[*] Initializing rblxgenerator v2.3.0...</div>
+                <div class="term-line t-info">[*] Loading modules: email, captcha, avatar...</div>
+                <div class="term-line t-success">[+] All systems ready. Starting infinite generation...</div>
+                <!-- Dynamic content will be added here -->
+            </div>
+        </div>
+
+        <h1 class="hero-title">rblx<span class="highlight">generator</span></h1>
+        <p class="hero-subtitle">
+            Generate unlimited Roblox accounts with auto-captcha solving,
+            email verification, and avatar customization. Fast. Free. Secure.
+        </p>
+
+        <div style="display: flex; gap: var(--space-md); flex-wrap: wrap; justify-content: center;">
+            <a href="signup.html" class="btn btn-primary">Start Generating</a>
+            <a href="#pricing" class="btn btn-secondary">View Pricing</a>
+        </div>
+
+        <div class="stats-bar container" style="max-width: 600px;">
+            <div class="stat-item">
+                <div class="stat-value" id="accounts-count">1,247,832</div>
+                <div class="stat-label">Accounts Generated</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">99.2%</div>
+                <div class="stat-label">Success Rate</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">24/7</div>
+                <div class="stat-label">Uptime</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="section">
+        <div class="container">
+            <h2 class="section-title">Powerful <span>Features</span></h2>
+
+            <div class="features-grid-3">
+                <div class="feature-card">
+                    <div class="feature-icon">[U]</div>
+                    <h3 class="feature-title">Smart Usernames</h3>
+                    <p class="feature-desc">Generate structured, scrambled, or custom prefix usernames that pass
+                        validation.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">[E]</div>
+                    <h3 class="feature-title">Email Verification</h3>
+                    <p class="feature-desc">Auto-verify accounts with temporary email addresses. Fully automated.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">[C]</div>
+                    <h3 class="feature-title">Captcha Bypass</h3>
+                    <p class="feature-desc">Manual for free users. Premium gets instant auto-solve via NopeCHA API.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">[A]</div>
+                    <h3 class="feature-title">Avatar Randomizer</h3>
+                    <p class="feature-desc">Customize avatar with random clothes, body types, and colors automatically.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">[F]</div>
+                    <h3 class="feature-title">Auto-Follow</h3>
+                    <p class="feature-desc">Follow specific users after creation. Build your follower network fast.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">[X]</div>
+                    <h3 class="feature-title">Multi-Export</h3>
+                    <p class="feature-desc">Export as TXT, CSV, JSON, or Roblox Account Manager format.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="section pricing-section">
+        <div class="container">
+            <h2 class="section-title">Choose Your <span>Plan</span></h2>
+            <p class="section-subtitle">Affordable pricing for everyone. Cancel anytime.</p>
+
+            <!-- Billing Toggle -->
+            <div class="billing-toggle">
+                <span class="toggle-label active" data-period="monthly">Monthly</span>
+                <div class="toggle-switch" onclick="toggleBilling()">
+                    <div class="toggle-slider"></div>
+                </div>
+                <span class="toggle-label" data-period="yearly">Yearly <span class="save-badge">Save 20%</span></span>
+            </div>
+
+            <div class="pricing-grid-new">
+                <!-- Free Plan -->
+                <div class="plan-card" data-plan="free">
+                    <div class="plan-header">
+                        <div class="plan-icon">[F]</div>
+                        <h3 class="plan-name">Free</h3>
+                        <p class="plan-tagline">Get started for free</p>
+                    </div>
+                    <div class="plan-price">
+                        <span class="price-amount">$0</span>
+                        <span class="price-period">/forever</span>
+                    </div>
+                    <div class="plan-features">
+                        <div class="feature-item included">
+                            <span class="feature-check">[+]</span>
+                            <span>3 accounts per day</span>
+                        </div>
+                        <div class="feature-item included">
+                            <span class="feature-check">[+]</span>
+                            <span>Manual captcha solving</span>
+                        </div>
+                        <div class="feature-item included">
+                            <span class="feature-check">[+]</span>
+                            <span>Basic username styles</span>
+                        </div>
+                        <div class="feature-item included">
+                            <span class="feature-check">[+]</span>
+                            <span>TXT export only</span>
+                        </div>
+                        <div class="feature-item excluded">
+                            <span class="feature-x">[-]</span>
+                            <span>Email verification</span>
+                        </div>
+                        <div class="feature-item excluded">
+                            <span class="feature-x">[-]</span>
+                            <span>Avatar customization</span>
+                        </div>
+                        <div class="feature-item excluded">
+                            <span class="feature-x">[-]</span>
+                            <span>Auto-follow users</span>
+                        </div>
+                        <div class="feature-item warning">
+                            <span class="feature-warn">[!]</span>
+                            <span>Contains ads</span>
+                        </div>
+                    </div>
+                    <a href="signup.html" class="plan-btn">Get Started Free</a>
+                </div>
+
+                <!-- Pro Plan -->
+                <div class="plan-card featured" data-plan="pro">
+                    <div class="popular-badge">MOST POPULAR</div>
+                    <div class="plan-glow"></div>
+                    <div class="plan-header">
+                        <div class="plan-icon">[P]</div>
+                        <h3 class="plan-name">Pro</h3>
+                        <p class="plan-tagline">For serious users</p>
+                    </div>
+                    <div class="plan-price">
+                        <span class="price-amount" data-monthly="$2.99" data-yearly="$2.39">$2.99</span>
+                        <span class="price-period">/month</span>
+                    </div>
+                    <div class="plan-features">
+                        <div class="feature-item included highlight">
+                            <span class="feature-check">[+]</span>
+                            <span>100 accounts per day</span>
+                        </div>
+                        <div class="feature-item included highlight">
+                            <span class="feature-check">[+]</span>
+                            <span>AUTO captcha solving</span>
+                        </div>
+                        <div class="feature-item included">
+                            <span class="feature-check">[+]</span>
+                            <span>All username styles</span>
+                        </div>
+                        <div class="feature-item included">
+                            <span class="feature-check">[+]</span>
+                            <span>TXT, CSV, JSON export</span>
+                        </div>
+                        <div class="feature-item included">
+                            <span class="feature-check">[+]</span>
+                            <span>Email verification</span>
+                        </div>
+                        <div class="feature-item included">
+                            <span class="feature-check">[+]</span>
+                            <span>Avatar customization</span>
+                        </div>
+                        <div class="feature-item included">
+                            <span class="feature-check">[+]</span>
+                            <span>Follow up to 5 users</span>
+                        </div>
+                        <div class="feature-item included">
+                            <span class="feature-check">[+]</span>
+                            <span>5 parallel generations</span>
+                        </div>
+                        <div class="feature-item included special">
+                            <span class="feature-check">[+]</span>
+                            <span>No ads</span>
+                        </div>
+                    </div>
+                    <a href="signup.html" class="plan-btn primary">Subscribe Now</a>
+                </div>
+
+                <!-- Ultimate Plan -->
+                <div class="plan-card" data-plan="ultimate">
+                    <div class="plan-header">
+                        <div class="plan-icon">[U]</div>
+                        <h3 class="plan-name">Ultimate</h3>
+                        <p class="plan-tagline">Maximum power</p>
+                    </div>
+                    <div class="plan-price">
+                        <span class="price-amount" data-monthly="$5.99" data-yearly="$4.79">$5.99</span>
+                        <span class="price-period">/month</span>
+                    </div>
+                    <div class="plan-features">
+                        <div class="feature-item included highlight">
+                            <span class="feature-check">[+]</span>
+                            <span>UNLIMITED accounts</span>
+                        </div>
+                        <div class="feature-item included highlight">
+                            <span class="feature-check">[+]</span>
+                            <span>AUTO captcha solving</span>
+                        </div>
+                        <div class="feature-item included">
+                            <span class="feature-check">[+]</span>
+                            <span>All username styles</span>
+                        </div>
+                        <div class="feature-item included highlight">
+                            <span class="feature-check">[+]</span>
+                            <span>All exports + RAM format</span>
+                        </div>
+                        <div class="feature-item included">
+                            <span class="feature-check">[+]</span>
+                            <span>Email verification</span>
+                        </div>
+                        <div class="feature-item included">
+                            <span class="feature-check">[+]</span>
+                            <span>Avatar customization</span>
+                        </div>
+                        <div class="feature-item included">
+                            <span class="feature-check">[+]</span>
+                            <span>Follow up to 20 users</span>
+                        </div>
+                        <div class="feature-item included highlight">
+                            <span class="feature-check">[+]</span>
+                            <span>10 parallel generations</span>
+                        </div>
+                        <div class="feature-item included special">
+                            <span class="feature-check">[+]</span>
+                            <span>Discord VIP support</span>
+                        </div>
+                    </div>
+                    <a href="signup.html" class="plan-btn">Subscribe Now</a>
+                </div>
+            </div>
+
+            <!-- Guarantee -->
+            <div class="guarantee-box">
+                <div class="guarantee-icon">[*]</div>
+                <div class="guarantee-text">
+                    <strong>7-Day Money Back Guarantee</strong>
+                    <span>Not satisfied? Get a full refund within 7 days, no questions asked.</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" class="section">
+        <div class="container">
+            <h2 class="section-title">Frequently <span>Asked</span></h2>
+
+            <div class="faq-grid">
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <div class="faq-question">
+                        <span>Is this safe to use?</span>
+                        <span class="faq-toggle">[+]</span>
+                    </div>
+                    <div class="faq-answer">
+                        Yes. The generator runs entirely in your browser using your own IP address. We never store or
+                        access your generated accounts.
+                    </div>
+                </div>
+
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <div class="faq-question">
+                        <span>How does auto-captcha work?</span>
+                        <span class="faq-toggle">[+]</span>
+                    </div>
+                    <div class="faq-answer">
+                        Premium users get access to our NopeCHA API integration which automatically solves captchas.
+                        Free users solve them manually.
+                    </div>
+                </div>
+
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <div class="faq-question">
+                        <span>Can I cancel anytime?</span>
+                        <span class="faq-toggle">[+]</span>
+                    </div>
+                    <div class="faq-answer">
+                        Absolutely. Cancel your subscription at any time from your dashboard. No hidden fees or
+                        cancellation penalties.
+                    </div>
+                </div>
+
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <div class="faq-question">
+                        <span>What payment methods do you accept?</span>
+                        <span class="faq-toggle">[+]</span>
+                    </div>
+                    <div class="faq-answer">
+                        We accept all major credit cards, PayPal, and cryptocurrency. All payments are processed
+                        securely.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section-new">
+        <div class="cta-bg-effect"></div>
+        <div class="container">
+            <div class="cta-content">
+                <h2 class="cta-title">Ready to <span>Generate</span>?</h2>
+                <p class="cta-subtitle">
+                    Join thousands of users already generating accounts. Start free, upgrade anytime.
+                </p>
+
+                <div class="cta-terminal-box">
+                    <div class="cta-terminal-header">
+                        <span class="terminal-dot red"></span>
+                        <span class="terminal-dot yellow"></span>
+                        <span class="terminal-dot green"></span>
+                        <span class="cta-terminal-title">rblxgen@user:~</span>
+                    </div>
+                    <div class="cta-terminal-body">
+                        <div class="cta-term-line"><span class="t-prompt">$</span> ./start_generating.sh --accounts 100
+                        </div>
+                        <div class="cta-term-line t-output">[*] Initializing generator...</div>
+                        <div class="cta-term-line t-output">[*] Connecting to services...</div>
+                        <div class="cta-term-line t-success">[+] Ready! Starting generation...</div>
+                        <div class="cta-term-line"><span class="t-prompt">$</span> <span class="t-cursor"></span></div>
+                    </div>
+                </div>
+
+                <div class="cta-buttons">
+                    <a href="signup.html" class="btn btn-primary btn-lg">Launch Generator</a>
+                    <a href="#pricing" class="btn btn-secondary">View Plans</a>
+                </div>
+
+                <div class="cta-stats">
+                    <div class="cta-stat">
+                        <span class="cta-stat-value">1M+</span>
+                        <span class="cta-stat-label">Accounts Created</span>
+                    </div>
+                    <div class="cta-stat-divider"></div>
+                    <div class="cta-stat">
+                        <span class="cta-stat-value">10K+</span>
+                        <span class="cta-stat-label">Active Users</span>
+                    </div>
+                    <div class="cta-stat-divider"></div>
+                    <div class="cta-stat">
+                        <span class="cta-stat-value">99%</span>
+                        <span class="cta-stat-label">Success Rate</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer-new">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="index.html" class="footer-logo">rblx<span>generator</span></a>
+                    <p class="footer-desc">
+                        The most powerful Roblox account generator. Fast, reliable, and secure.
+                    </p>
+                    <div class="footer-social">
+                        <a href="#" class="social-link" title="Discord">[Discord]</a>
+                        <a href="#" class="social-link" title="Twitter">[Twitter]</a>
+                        <a href="#" class="social-link" title="GitHub">[GitHub]</a>
+                    </div>
+                </div>
+
+                <div class="footer-links">
+                    <h4>Product</h4>
+                    <a href="generator.html">Generator</a>
+                    <a href="#pricing">Pricing</a>
+                    <a href="#features">Features</a>
+                    <a href="#faq">FAQ</a>
+                </div>
+
+                <div class="footer-links">
+                    <h4>Legal</h4>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Refund Policy</a>
+                </div>
+
+                <div class="footer-links">
+                    <h4>Support</h4>
+                    <a href="#">Discord Server</a>
+                    <a href="#">Contact Us</a>
+                    <a href="#">Status Page</a>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <div class="footer-credit-new">
+                    Built with passion by <span class="famy">Famy</span>
+                </div>
+                <div class="footer-legal">
+                    rblxgenerator is not affiliated with Roblox Corporation.
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <style>
+        /* Pricing Section Styles */
+        .pricing-section {
+            background: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+            padding: 80px 0;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-secondary);
+            margin-top: -16px;
+            margin-bottom: 32px;
+        }
+
+        /* Features Grid 3 Columns */
+        .features-grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        @media (max-width: 900px) {
+            .features-grid-3 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .features-grid-3 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* CTA Terminal Box */
+        .cta-terminal-box {
+            max-width: 500px;
+            margin: 0 auto 32px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-dim);
+            border-radius: 12px;
+            overflow: hidden;
+            text-align: left;
+        }
+
+        .cta-terminal-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            background: var(--bg-tertiary);
+            border-bottom: 1px solid var(--border-dim);
+        }
+
+        .cta-terminal-title {
+            margin-left: auto;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .cta-terminal-body {
+            padding: 16px;
+            font-size: 13px;
+            font-family: var(--font-mono);
+        }
+
+        .cta-term-line {
+            margin-bottom: 4px;
+            color: var(--text-primary);
+        }
+
+        .cta-term-line .t-prompt {
+            color: var(--red-primary);
+            margin-right: 8px;
+        }
+
+        .cta-term-line.t-output {
+            color: var(--text-secondary);
+        }
+
+        .cta-term-line.t-success {
+            color: var(--terminal-green);
+        }
+
+        .t-cursor {
+            display: inline-block;
+            width: 8px;
+            height: 14px;
+            background: var(--red-primary);
+            animation: blink 1s step-end infinite;
+            vertical-align: text-bottom;
+        }
+
+        /* Billing Toggle */
+        .billing-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 48px;
+        }
+
+        .toggle-label {
+            font-size: 14px;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .toggle-label.active {
+            color: var(--text-primary);
+        }
+
+        .save-badge {
+            background: var(--red-primary);
+            color: #fff;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: 4px;
+        }
+
+        .toggle-switch {
+            width: 48px;
+            height: 24px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-dim);
+            border-radius: 12px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .toggle-slider {
+            width: 18px;
+            height: 18px;
+            background: var(--red-primary);
+            border-radius: 50%;
+            position: absolute;
+            top: 2px;
+            left: 3px;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .toggle-switch.yearly .toggle-slider {
+            transform: translateX(24px);
+        }
+
+        /* New Pricing Grid */
+        .pricing-grid-new {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 900px) {
+            .pricing-grid-new {
+                grid-template-columns: 1fr;
+                max-width: 400px;
+            }
+        }
+
+        /* Plan Cards */
+        .plan-card {
+            background: rgba(17, 17, 17, 0.8);
+            border: 1px solid var(--border-dim);
+            border-radius: 16px;
+            padding: 32px 24px;
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+        }
+
+        .plan-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--red-primary), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .plan-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--border-active);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .plan-card:hover::before {
+            opacity: 1;
+        }
+
+        .plan-card.featured {
+            background: rgba(255, 0, 51, 0.05);
+            border-color: var(--red-primary);
+            transform: scale(1.05);
+            z-index: 10;
+        }
+
+        .plan-card.featured:hover {
+            transform: scale(1.05) translateY(-8px);
+        }
+
+        .plan-glow {
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 0, 51, 0.1) 0%, transparent 60%);
+            animation: rotate 20s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .popular-badge {
+            position: absolute;
+            top: -1px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--red-primary);
+            color: #fff;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 4px 16px;
+            border-radius: 0 0 8px 8px;
+            letter-spacing: 1px;
+        }
+
+        .plan-header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .plan-icon {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-dim);
+            border-radius: 12px;
+            color: var(--red-primary);
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .plan-name {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .plan-tagline {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .plan-price {
+            text-align: center;
+            margin-bottom: 24px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--border-dim);
+        }
+
+        .price-amount {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--red-primary);
+        }
+
+        .price-period {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .plan-features {
+            margin-bottom: 24px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 0;
+            font-size: 13px;
+            color: var(--text-secondary);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .feature-item:last-child {
+            border-bottom: none;
+        }
+
+        .feature-item.included {
+            color: var(--text-primary);
+        }
+
+        .feature-item.highlight {
+            color: var(--terminal-green);
+        }
+
+        .feature-item.highlight .feature-check {
+            color: var(--terminal-green);
+        }
+
+        .feature-item.excluded {
+            color: var(--text-muted);
+            text-decoration: line-through;
+            opacity: 0.6;
+        }
+
+        .feature-item.warning {
+            color: #ffbd2e;
+        }
+
+        .feature-item.special {
+            color: var(--pink-neon);
+        }
+
+        .feature-check {
+            color: var(--terminal-green);
+            font-weight: 600;
+        }
+
+        .feature-x {
+            color: var(--text-muted);
+        }
+
+        .feature-warn {
+            color: #ffbd2e;
+        }
+
+        .plan-btn {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            text-align: center;
+            font-family: var(--font-mono);
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--border-dim);
+        }
+
+        .plan-btn:hover {
+            border-color: var(--red-primary);
+            color: var(--red-primary);
+            transform: translateY(-2px);
+        }
+
+        .plan-btn.primary {
+            background: var(--red-primary);
+            border-color: var(--red-primary);
+            color: #fff;
+            box-shadow: 0 4px 20px rgba(255, 0, 51, 0.3);
+        }
+
+        .plan-btn.primary:hover {
+            background: var(--red-secondary);
+            box-shadow: 0 6px 30px rgba(255, 0, 51, 0.4);
+        }
+
+        /* Guarantee */
+        .guarantee-box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            margin-top: 48px;
+            padding: 20px 32px;
+            background: rgba(0, 255, 0, 0.03);
+            border: 1px dashed rgba(0, 255, 0, 0.2);
+            border-radius: 12px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .guarantee-icon {
+            color: var(--terminal-green);
+            font-size: 24px;
+        }
+
+        .guarantee-text {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .guarantee-text strong {
+            color: var(--terminal-green);
+        }
+
+        .guarantee-text span {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        /* FAQ */
+        .faq-grid {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-dim);
+            border-radius: 8px;
+            margin-bottom: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .faq-item:hover {
+            border-color: var(--border-active);
+        }
+
+        .faq-item.open {
+            border-color: var(--red-primary);
+        }
+
+        .faq-question {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            font-weight: 500;
+        }
+
+        .faq-toggle {
+            color: var(--red-primary);
+            transition: transform 0.3s;
+        }
+
+        .faq-item.open .faq-toggle {
+            transform: rotate(45deg);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            padding: 0 20px;
+            color: var(--text-secondary);
+            font-size: 14px;
+            line-height: 1.6;
+            transition: all 0.3s;
+        }
+
+        .faq-item.open .faq-answer {
+            max-height: 200px;
+            padding: 0 20px 16px;
+        }
+
+        /* CTA Section */
+        .cta-section-new {
+            position: relative;
+            padding: 100px 0;
+            background: var(--bg-primary);
+            overflow: hidden;
+        }
+
+        .cta-bg-effect {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(ellipse at 50% 0%, rgba(255, 0, 51, 0.1) 0%, transparent 50%),
+                radial-gradient(ellipse at 0% 100%, rgba(255, 0, 51, 0.05) 0%, transparent 40%),
+                radial-gradient(ellipse at 100% 100%, rgba(255, 105, 180, 0.05) 0%, transparent 40%);
+            pointer-events: none;
+        }
+
+        .cta-content {
+            position: relative;
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .cta-terminal {
+            display: inline-block;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-dim);
+            border-radius: 8px;
+            padding: 12px 24px;
+            margin-bottom: 32px;
+            text-align: left;
+        }
+
+        .cta-terminal-line {
+            font-size: 13px;
+        }
+
+        .cta-title {
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .cta-title span {
+            color: var(--red-primary);
+            text-shadow: 0 0 30px var(--red-glow);
+        }
+
+        .cta-subtitle {
+            font-size: 16px;
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+            line-height: 1.6;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 48px;
+        }
+
+        .btn-lg {
+            padding: 16px 32px;
+            font-size: 16px;
+        }
+
+        .cta-stats {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 32px;
+            flex-wrap: wrap;
+        }
+
+        .cta-stat {
+            text-align: center;
+        }
+
+        .cta-stat-value {
+            display: block;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--red-primary);
+        }
+
+        .cta-stat-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .cta-stat-divider {
+            width: 1px;
+            height: 40px;
+            background: var(--border-dim);
+        }
+
+        /* Footer */
+        .footer-new {
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border-dim);
+            padding: 60px 0 30px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr repeat(3, 1fr);
+            gap: 48px;
+            margin-bottom: 48px;
+        }
+
+        @media (max-width: 768px) {
+            .footer-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 32px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .footer-logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-decoration: none;
+            display: inline-block;
+            margin-bottom: 12px;
+        }
+
+        .footer-logo span {
+            color: var(--red-primary);
+        }
+
+        .footer-desc {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 12px;
+        }
+
+        .social-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 12px;
+            padding: 6px 10px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-dim);
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .social-link:hover {
+            color: var(--red-primary);
+            border-color: var(--red-primary);
+        }
+
+        .footer-links h4 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+        }
+
+        .footer-links a {
+            display: block;
+            font-size: 13px;
+            color: var(--text-muted);
+            text-decoration: none;
+            padding: 6px 0;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: var(--red-primary);
+        }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 24px;
+            border-top: 1px solid var(--border-dim);
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .footer-credit-new {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .footer-credit-new .famy {
+            color: var(--pink-neon);
+            text-shadow: 0 0 15px var(--pink-glow);
+            font-weight: 600;
+        }
+
+        .footer-legal {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+    </style>
+
+    <script>
+        // Animate counter on scroll
+        const countEl = document.getElementById('accounts-count');
+        let counted = false;
+
+        function animateCount() {
+            if (counted) return;
+            const target = 1247832;
+            let current = 0;
+            const increment = Math.ceil(target / 100);
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    current = target;
+                    clearInterval(timer);
+                }
+                countEl.textContent = current.toLocaleString();
+            }, 20);
+            counted = true;
+        }
+
+        // Trigger on scroll into view
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateCount();
+                }
+            });
+        });
+        observer.observe(countEl);
+
+        // Billing toggle
+        let isYearly = false;
+        function toggleBilling() {
+            isYearly = !isYearly;
+            const toggle = document.querySelector('.toggle-switch');
+            const labels = document.querySelectorAll('.toggle-label');
+            const prices = document.querySelectorAll('.price-amount[data-monthly]');
+
+            toggle.classList.toggle('yearly', isYearly);
+
+            labels.forEach(label => {
+                label.classList.toggle('active',
+                    (isYearly && label.dataset.period === 'yearly') ||
+                    (!isYearly && label.dataset.period === 'monthly')
+                );
+            });
+
+            prices.forEach(price => {
+                price.textContent = isYearly ? price.dataset.yearly : price.dataset.monthly;
+            });
+        }
+
+        // FAQ toggle
+        function toggleFaq(item) {
+            const wasOpen = item.classList.contains('open');
+            document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+            if (!wasOpen) item.classList.add('open');
+        }
+    </script>
+    <script>
+        // Hero Terminal Animation - 744hz Ultra Smooth Mode
+        const heroTerminal = document.getElementById('heroTerminal');
+
+        // More realistic "human" name components
+        const prefixes = ['its', 'the', 'real', 'im', 'not', 'ur', 'my', 'xx', 'ii', 'omg'];
+        const names = ['alex', 'sarah', 'jake', 'emma', 'kai', 'luna', 'max', 'ruby', 'tyler', 'claire', 'josh', 'mia', 'noah', 'zoe', 'ryan', 'ivy', 'leo', 'ava'];
+        const suffixes = ['gaming', 'plays', 'yt', 'roblox', 'cool', 'pro', 'god', 'king', 'queen', 'vibes'];
+
+        function generateRandomString(length) {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*';
+            let result = '';
+            for (let i = 0; i < length; i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return result;
+        }
+
+        function generateRealisticUsername() {
+            const type = Math.floor(Math.random() * 4);
+            const name = names[Math.floor(Math.random() * names.length)];
+            const num = Math.floor(Math.random() * 999);
+
+            if (type === 0) {
+                // simple name + num: alex847
+                return `${name}${num}`;
+            } else if (type === 1) {
+                // prefix + name: itsalex
+                const pre = prefixes[Math.floor(Math.random() * prefixes.length)];
+                return `${pre}${name}`;
+            } else if (type === 2) {
+                // name + suffix: alexplays
+                const suf = suffixes[Math.floor(Math.random() * suffixes.length)];
+                return `${name}${suf}`;
+            } else {
+                // aesthetic: ii_alex_xx
+                return `ii_${name}_xx`;
+            }
+        }
+
+        let lastTime = 0;
+        const speed = 20; // Lower is faster (ms between frames)
+
+        function animateTerminal(timestamp) {
+            if (timestamp - lastTime >= speed) {
+                const username = generateRealisticUsername();
+                const password = generateRandomString(12);
+
+                // Create combined line for density
+                const line = document.createElement('div');
+                line.className = 'term-line t-account';
+                // Add fade-in animation
+                line.style.animation = 'slideUp 0.1s ease-out';
+                line.innerHTML = `<span style="color:var(--text-secondary)">[*] Gen:</span> <span class="acc-user">${username}</span>:<span class="acc-pass">${password}</span> <span style="color:var(--terminal-green); margin-left:10px">[OK]</span>`;
+
+                // Append to terminal
+                heroTerminal.appendChild(line);
+
+                // Constant smooth scroll
+                heroTerminal.scrollTop = heroTerminal.scrollHeight;
+
+                // Cleanup aggressively to maintain DOM performance
+                if (heroTerminal.children.length > 35) {
+                    heroTerminal.removeChild(heroTerminal.children[4]);
+                }
+
+                lastTime = timestamp;
+            }
+            requestAnimationFrame(animateTerminal);
+        }
+
+        // Start the engine
+        requestAnimationFrame(animateTerminal);
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="rblxgenerator - Generate Roblox accounts instantly">
+    <title>Generator - rblxgenerator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/terminal.css">
+    <style>
+        .generator-page {
+            min-height: 100vh;
+            padding-top: 80px;
+        }
+
+        .generator-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-md) var(--space-lg);
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-dim);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: var(--font-size-lg);
+            font-weight: 700;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: var(--red-primary);
+        }
+
+        .user-tier {
+            padding: var(--space-xs) var(--space-md);
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-dim);
+            border-radius: var(--radius-sm);
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+        }
+
+        .user-tier.pro {
+            border-color: var(--red-primary);
+            color: var(--red-primary);
+        }
+
+        .generator-layout {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: var(--space-lg);
+            padding: var(--space-lg);
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 1024px) {
+            .generator-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .main-panel {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-lg);
+        }
+
+        .side-panel {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-lg);
+        }
+
+        .panel {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-dim);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+        }
+
+        .panel-header {
+            padding: var(--space-md) var(--space-lg);
+            background: var(--bg-tertiary);
+            border-bottom: 1px solid var(--border-dim);
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .panel-body {
+            padding: var(--space-lg);
+        }
+
+        .config-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-md);
+        }
+
+        @media (max-width: 600px) {
+            .config-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .config-item {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-xs);
+        }
+
+        .config-item.full-width {
+            grid-column: span 2;
+        }
+
+        @media (max-width: 600px) {
+            .config-item.full-width {
+                grid-column: span 1;
+            }
+        }
+
+        .config-label {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+        }
+
+        .config-input,
+        .config-select {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-dim);
+            border-radius: var(--radius-sm);
+            padding: var(--space-sm) var(--space-md);
+            color: var(--text-primary);
+            font-family: var(--font-mono);
+            font-size: var(--font-size-sm);
+        }
+
+        .config-input:focus,
+        .config-select:focus {
+            outline: none;
+            border-color: var(--red-primary);
+        }
+
+        .config-checkbox {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            cursor: pointer;
+        }
+
+        .config-checkbox input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--red-primary);
+        }
+
+        .pro-badge {
+            font-size: var(--font-size-xs);
+            padding: 2px 6px;
+            background: var(--red-primary);
+            color: #fff;
+            border-radius: var(--radius-sm);
+            margin-left: var(--space-xs);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: var(--space-md);
+            margin-top: var(--space-md);
+        }
+
+        .action-buttons .btn {
+            flex: 1;
+        }
+
+        .terminal-log {
+            background: var(--bg-primary);
+            border-radius: var(--radius-md);
+            padding: var(--space-md);
+            height: 350px;
+            overflow-y: auto;
+            font-size: var(--font-size-xs);
+        }
+
+        .log-line {
+            margin-bottom: 2px;
+            font-family: var(--font-mono);
+        }
+
+        .log-time {
+            color: var(--text-muted);
+        }
+
+        .log-info {
+            color: var(--text-secondary);
+        }
+
+        .log-success {
+            color: var(--terminal-green);
+        }
+
+        .log-error {
+            color: var(--red-primary);
+        }
+
+        .log-warning {
+            color: #ffbd2e;
+        }
+
+        .accounts-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .account-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-sm) var(--space-md);
+            background: var(--bg-primary);
+            border: 1px solid var(--border-dim);
+            border-radius: var(--radius-sm);
+            margin-bottom: var(--space-sm);
+            font-size: var(--font-size-sm);
+        }
+
+        .account-row:hover {
+            border-color: var(--border-active);
+        }
+
+        .account-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .account-user {
+            color: var(--terminal-green);
+        }
+
+        .account-pass {
+            color: var(--text-muted);
+            font-size: var(--font-size-xs);
+        }
+
+        .account-actions {
+            display: flex;
+            gap: var(--space-xs);
+        }
+
+        .btn-icon {
+            width: 32px;
+            height: 32px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-dim);
+            border-radius: var(--radius-sm);
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .btn-icon:hover {
+            border-color: var(--red-primary);
+            color: var(--red-primary);
+        }
+
+        .export-buttons {
+            display: flex;
+            gap: var(--space-sm);
+            flex-wrap: wrap;
+        }
+
+        .export-buttons .btn {
+            padding: var(--space-sm) var(--space-md);
+            font-size: var(--font-size-sm);
+        }
+
+        .stats-row {
+            display: flex;
+            justify-content: space-between;
+            padding: var(--space-sm) 0;
+            border-bottom: 1px solid var(--border-dim);
+            font-size: var(--font-size-sm);
+        }
+
+        .stats-row:last-child {
+            border-bottom: none;
+        }
+
+        .stats-label {
+            color: var(--text-secondary);
+        }
+
+        .stats-value {
+            color: var(--red-primary);
+            font-weight: 600;
+        }
+
+        .progress-bar {
+            height: 4px;
+            background: var(--bg-tertiary);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: var(--space-md);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--red-primary);
+            width: 0%;
+            transition: width var(--transition-base);
+        }
+
+        .captcha-container {
+            background: var(--bg-tertiary);
+            border: 1px dashed var(--border-dim);
+            border-radius: var(--radius-md);
+            padding: var(--space-xl);
+            text-align: center;
+            color: var(--text-muted);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: var(--space-xl);
+            color: var(--text-muted);
+        }
+
+        /* Free tier ad container */
+        .ad-banner {
+            background: var(--bg-tertiary);
+            border: 1px dashed var(--border-dim);
+            padding: var(--space-md);
+            text-align: center;
+            margin-bottom: var(--space-lg);
+            border-radius: var(--radius-md);
+        }
+
+        .ad-banner-label {
+            font-size: var(--font-size-xs);
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="generator-header">
+        <a href="index.html" class="logo">rblx<span>generator</span></a>
+        <div class="user-tier" id="userTier">FREE TIER</div>
+    </header>
+
+    <div class="generator-page">
+        <!-- Ad Banner (Free tier only) -->
+        <div class="ad-banner" id="adBanner">
+            <div class="ad-banner-label">Advertisement - Upgrade to Pro to remove ads</div>
+            <div
+                style="height: 90px; display: flex; align-items: center; justify-content: center; color: var(--text-muted);">
+                [Ad Space - 728x90]
+            </div>
+        </div>
+
+        <div class="generator-layout">
+            <!-- Main Panel -->
+            <div class="main-panel">
+                <!-- Configuration Panel -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <span>Configuration</span>
+                        <span
+                            style="font-size: var(--font-size-xs); color: var(--text-muted);">root@rblxgen:~/config</span>
+                    </div>
+                    <div class="panel-body">
+                        <div class="config-grid">
+                            <div class="config-item">
+                                <label class="config-label">Account Count</label>
+                                <input type="number" class="config-input" id="accountCount" value="1" min="1" max="3">
+                            </div>
+
+                            <div class="config-item">
+                                <label class="config-label">Username Style</label>
+                                <select class="config-select" id="usernameStyle">
+                                    <option value="scrambled">Scrambled</option>
+                                    <option value="structured" disabled>Structured [PRO]</option>
+                                    <option value="custom" disabled>Custom Prefix [PRO]</option>
+                                </select>
+                            </div>
+
+                            <div class="config-item">
+                                <label class="config-label">Password</label>
+                                <input type="text" class="config-input" id="password"
+                                    placeholder="Leave empty for auto-generate">
+                            </div>
+
+                            <div class="config-item">
+                                <label class="config-label">Birthday Year</label>
+                                <select class="config-select" id="birthYear">
+                                    <option value="2007">2007 (18 years old)</option>
+                                    <option value="2006">2006 (19 years old)</option>
+                                    <option value="2005">2005 (20 years old)</option>
+                                    <option value="2004">2004 (21 years old)</option>
+                                </select>
+                            </div>
+
+                            <div class="config-item full-width">
+                                <label class="config-checkbox">
+                                    <input type="checkbox" id="emailVerify" disabled>
+                                    Email Verification <span class="pro-badge">PRO</span>
+                                </label>
+                            </div>
+
+                            <div class="config-item full-width">
+                                <label class="config-checkbox">
+                                    <input type="checkbox" id="avatarCustomize" disabled>
+                                    Avatar Customization <span class="pro-badge">PRO</span>
+                                </label>
+                            </div>
+
+                            <div class="config-item full-width">
+                                <label class="config-label">Follow Users (comma separated) <span
+                                        class="pro-badge">PRO</span></label>
+                                <input type="text" class="config-input" id="followUsers"
+                                    placeholder="username1, username2" disabled>
+                            </div>
+                        </div>
+
+                        <div class="action-buttons">
+                            <button class="btn btn-primary" id="startBtn" onclick="startGeneration()">
+                                Start Generation
+                            </button>
+                            <button class="btn btn-secondary" id="stopBtn" onclick="stopGeneration()" disabled>
+                                Stop
+                            </button>
+                        </div>
+
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressBar"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Terminal Log -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <span>Terminal Output</span>
+                        <button class="btn-icon" onclick="clearLog()" title="Clear log">[X]</button>
+                    </div>
+                    <div class="panel-body" style="padding: 0;">
+                        <div class="terminal-log" id="terminalLog">
+                            <div class="log-line">
+                                <span class="log-time">[00:00:00]</span>
+                                <span class="log-info"> System initialized. Ready to generate accounts.</span>
+                            </div>
+                            <div class="log-line">
+                                <span class="log-time">[00:00:00]</span>
+                                <span class="log-info"> Tier: FREE | Daily limit: 3 accounts</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Captcha Container (for manual solving) -->
+                <div class="panel" id="captchaPanel" style="display: none;">
+                    <div class="panel-header">
+                        <span>Captcha Required</span>
+                        <span style="font-size: var(--font-size-xs); color: var(--text-muted);">Solve to continue</span>
+                    </div>
+                    <div class="panel-body">
+                        <div class="captcha-container" id="captchaContainer">
+                            Captcha will appear here when generation starts.
+                            <br><br>
+                            <span style="font-size: var(--font-size-xs);">Upgrade to Pro for auto-solve</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Side Panel -->
+            <div class="side-panel">
+                <!-- Stats -->
+                <div class="panel">
+                    <div class="panel-header">Session Stats</div>
+                    <div class="panel-body">
+                        <div class="stats-row">
+                            <span class="stats-label">Generated Today</span>
+                            <span class="stats-value" id="todayCount">0 / 3</span>
+                        </div>
+                        <div class="stats-row">
+                            <span class="stats-label">Success Rate</span>
+                            <span class="stats-value" id="successRate">--</span>
+                        </div>
+                        <div class="stats-row">
+                            <span class="stats-label">Current Status</span>
+                            <span class="stats-value" id="currentStatus">Idle</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Generated Accounts -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <span>Generated Accounts</span>
+                        <span style="font-size: var(--font-size-xs); color: var(--text-muted);" id="accountsHeader">0
+                            accounts</span>
+                    </div>
+                    <div class="panel-body">
+                        <div class="accounts-list" id="accountsList">
+                            <div class="empty-state">
+                                No accounts generated yet.
+                                <br>Configure and click Start.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Export -->
+                <div class="panel">
+                    <div class="panel-header">Export Accounts</div>
+                    <div class="panel-body">
+                        <div class="export-buttons">
+                            <button class="btn btn-secondary" onclick="exportAccounts('txt')">TXT</button>
+                            <button class="btn btn-ghost" onclick="showUpgrade()" disabled>CSV [PRO]</button>
+                            <button class="btn btn-ghost" onclick="showUpgrade()" disabled>JSON [PRO]</button>
+                            <button class="btn btn-ghost" onclick="showUpgrade()" disabled>RAM [ULT]</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p class="footer-credit">
+            Built with passion by <span class="famy">Famy</span>
+        </p>
+    </footer>
+
+    <script src="js/generator.js"></script>
+</body>
+
+</html>
